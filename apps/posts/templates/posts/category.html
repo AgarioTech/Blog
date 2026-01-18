@@ -1,0 +1,22 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+    {% block link %}<link rel="stylesheet" href="{% static 'posts/css/styles.css' %}?v=3">{% endblock %}
+
+
+{% block body %}
+    <div class="category-container">
+        <div class="theme_header">
+            <img src="{{ category.image.url }}" class="theme_img">
+            <span class="theme_subscribe-btn" onclick="themeFollowFunc(this)" data-id="{{ request.user.id }}" datatype="{{ category.tag }}">Подписаться</span>
+        </div>
+        <div class="theme-subs">
+            <span class="category_title">{{ category.cat_title }}</span>
+            <span class="category_tag">@{{ category.tag }}</span>
+            <span class="category_description">{{ category.description }}</span>
+            <span>Подписчики {{ category.followers.all|length }}</span>
+        </div>
+    </div>
+
+{% endblock %}

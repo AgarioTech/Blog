@@ -1,0 +1,44 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+{% load cache %}
+{% load custom_filters %}
+
+
+{% block body %}
+    <div class="profile__wrapper">
+        <div class="profile__head">
+            <div class="profile__meta">
+                <div class="profile__user-info">
+                    <img src="{{ profile_user.image.url }}" class="profile__avatar">
+                    <span class="profile__username">{{ profile_user.username }}</span>
+                </div>
+                {% if request.user != profile_user %}
+                    <div class="button-follow" onclick="userFollows(this)" data-id="{{ profile_user.id }}">Подписаться</div>
+                {% endif %}
+            </div>
+            <div class="profile__bio">
+                {% if not profile_user.bio or profile_user.bio == 'None' %}
+                    {% if profile_user == request.user %}
+                        <a href="{% url 'settings' %}" class="profile__add-bio-button">добавить описание</a>
+                    {% endif %}
+                {% else %}
+                    <span>{{ profile_user.bio }}</span>
+                    {% if request.user == profile_user %}
+                        <img class="site-header__img-add-post" onclick="settings(this)" src="/media/icons/pencil.svg">
+                    {% endif %}
+
+                {% endif %}
+            </div>
+            <div class="profile__header-nav">
+                <a href="{% url 'profile' profile_user %}" id="profile-nav__item_1" class="profile-nav__item" onclick="profilePostsFunc(this)" data-id="{{ profile_user }}">Посты</a>
+                {% if profile_user == request.user %}
+                  <a href="{% url 'profile_with_section' profile_user 'bookmarks' %}" id="profile-nav__item_2" class="profile-nav__item" onclick="profileBookmarksFunc()" data-id="{{ profile_user }}">Закладки</a>
+                {% endif %}
+                <a href="{% url 'profile_with_section' profile_user 'subscribes' %}" id="profile-nav__item_3" class="profile-nav__item" onclick="profileSubscribesFunc(this)" data-id="{{ profile_user }}" data-auth="{{ profile_user.id }}">Подписки</a>
+                <a href="{% url 'profile_with_section' profile_user 'followers' %}" id="profile-nav__item_4" class="profile-nav__item" onclick="profileFollowersFunc()" data-id="{{ profile_user }}" data-auth="{{ profile_user.id }}">Подписчики</a>
+                <a href="{% url 'profile_with_section' profile_user 'comments' %}" id="profile-nav__item_5" class="profile-nav__item" onclick="profileCommentsFunc()" data-id="{{ profile_user }}" data-auth="{{ profile_user.id }}">Комментарии</a>
+            </div>
+        </div>
+        <div class="profile__content-container"></div>
+    </div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+
+{% block body %}
+    <div class="create-post__wrapper">
+        <div class="create-post__user-info">
+            <img src="{{ request.user.image.url }}" class="create-post__user-info-avatar">
+            <a>{{ request.user }}</a>
+        </div>
+        <div class="create-post__themes-wrapper">
+            <div class="create-post__theme-button">Тема
+                <img src="/media/icons/arrow-up.svg" class="theme-button__arrow--up">
+            </div>
+            <div class="themes">
+                <div class="scrollable">
+                    {% for theme in categories %}
+                        <div class="theme-item">
+                            <img src="{{ theme.image.url }}" class="theme-item__icon">
+                            <a class="theme-item__text">{{ theme.cat_title }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="wrapp-img__wrapper">
+            <p>Обложка</p>
+            <div class="drop-img" id="dragArea">
+                <img class="img-preview">
+                <div class="preview">
+                    <input type="file" accept="image/*" class="preview-img__input">
+                    <div class="preview__message">
+                        <span class="wrong-format__message wrong-format__message--hidden">Неправильный формат.Загрузите .png, .jpg, .jpeg</span>
+                        <div class="wrapper-message">
+                            <img src="/media/icons/img-icon.svg" alt="">
+                            <p>Добавьте обложку к посту</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="delete-preview__button">Удалить изображение</div>
+        </div>
+        <div class="post-title">
+            <p>Название</p>
+            <input class="post-title__input" type="text" name="content" placeholder="Введите название">
+        </div>
+        <div class="editor-cont">
+            <p>Описание</p>
+            <div class="editor">
+            </div>
+            <div class="post-type__selector">
+                <div class="post-type__title">Тип публикации</div>
+                <div class="filters__type-option" onclick="setPostType(this)">Новость</div>
+                <div class="filters__type-option" onclick="setPostType(this)">Статья</div>
+                <div class="filters__type-option" onclick="setPostType(this)">Пост</div>
+            </div>
+            <div class="send-moder__button">Отправить на модерацию</div>
+        </div>
+    </div>
+    <!-- Quill скрипт -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script>
+        const toolbarOptions = [
+          [{ 'header': [2, 3, false] }],
+          [{'color': []}],
+          [{'background': []}],
+          ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+          ['blockquote', 'code-block'],
+          ['link', 'image', 'formula'],                                        // remove formatting button
+        ];
+
+        const quill = new Quill('.editor', {
+            placeholder: 'Введите описание',
+            modules: {
+                toolbar: toolbarOptions
+              },
+              theme: 'snow'
+            });
+    </script>
+{% endblock %}

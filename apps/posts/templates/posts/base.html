@@ -1,0 +1,224 @@
+{% load static %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>{{ title }}</title>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/posts/main.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet"/>
+</head>
+<body>
+    <header class="site-header">
+        <a href="{% url 'index' %}" class="site-header__logo">Xora</a>
+        <div class="site-header__actions">
+            <div class="site-header__search-wrapper">
+                <input class="site-header__input-search" placeholder="Поиск">
+                <div class="site-header__search-img-wrapper">
+                    <img class="site-header__search-img" src="/media/icons/search.svg" onclick="searchPosts()" datatype="{{ request.user.username }}">
+                </div>
+            </div>
+            <a class="site-header__button-add-post" href="{% url 'add_post' %}">
+                <img class="site-header__img-add-post" src="/media/icons/pencil.svg">
+                Написать
+            </a>
+            {% if request.user.is_authenticated %}
+                <div class="site-header__icon-notifications-wrapper" onclick="notificationFunc()">
+                    <img class="site-header__img-notifications" src="/media/icons/bell.png">
+                    {% if notification_count %}
+                        <div class="site-header__notifications-count" style="text-decoration: none;">{{ notification_count }}</div>
+                    {% endif %}
+                    <div class="site-header__notification-container">
+                        <div class="site-header__notifications-navbar">
+                            <span>Уведомления</span>
+                        </div>
+                        <div class="site-header__notifications-message-wrapper">
+                            {% for notification in notifications %}
+                                {% if notification.is_active %}
+                                <div class="site-header__notification-item-hover" onclick="window.location.href='{{ notification.link }}'">
+                                    <div class="site-header__notification-item-compact">
+                                        <img src="{{ notification.actor.image.url }}" class="site-header__notification-item-user-img">
+                                        <div>
+                                            {{ notification.message|safe }}
+                                            <div class="site-header__notification-item-date">
+                                                {{ notification.date|smart_time }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="site-header__account-button" onclick="profileMenuFunc(this)">
+                {% if user.is_authenticated %}
+                    <img class="site-header__account-img" src="{{ user.image.url }}">
+                    <div class="site-header__account-menu">
+                        <div class="site-header__menu-item">
+                            <a href="{% url 'profile' request.user.username %}" class="site-header__menu-item-link">Профиль</a>
+                        </div>
+                        <div class="site-header__menu-item">
+                            <a href="{% url 'profile_with_section' request.user.username 'subscribes' %}" class="site-header__menu-item-link">Подписки</a>
+                        </div>
+                        <div class="site-header__menu-item">
+                            <a href="{% url 'profile_with_section' request.user.username 'bookmarks' %}" class="site-header__menu-item-link">Закладки</a>
+                        </div>
+                        <div class="site-header__menu-item">
+                            <a href="{% url 'profile_with_section' request.user.username 'comments' %}" class="site-header__menu-item-link">Комментарии</a>
+                        </div>
+                        <div class="site-header__menu-item">
+                            <a href="{% url 'settings' %}" class="site-header__menu-item-link">Настройки</a>
+                        </div>
+                        <div class="site-header__menu-item">
+                            <a href="{% url 'errors' %}" class="site-header__menu-item-link">Сообщить об ошибке</a>
+                        </div>
+                        <div class="site-header__menu-item">
+                            <a onclick="logout()" class="site-header__menu-item-link">Выйти</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="site-header__login-button" href="{% url 'login' %}">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="scroll-top" id="scroll-id">
+            <div class="wrapper-btn">
+                <img src="/media/icons/arrow-up.svg">
+            </div>
+        </div>
+        <div class="container">
+            <div class="posts-container">
+                {% block body %}
+                {% endblock %}
+            </div>
+            <div class="sticky-sidebar">
+                {% if request.user.is_authenticated %}
+                    <div class="profile-cont">
+                        <div class="profile-data">
+                            <div class="user-data">
+                                <img src="{{ user.image.url }}" class="profile-user-img">
+                                <div class="logout-and-username">
+                                    <a href="{% url 'profile' user.username %}">{{ request.user }}</a>
+                                    <a class="logout" onclick="logout()">выйти</a>
+                                </div>
+                            </div>
+                            <img class="settings-img" src="/media/icons/settings.svg" onclick="settings(this)">
+                        </div>
+                        <div class="profile-elements">
+                            {% if request.user.is_staff %}
+                            <div class="admin-cont" onclick="adminRedirect()">
+                                <a>Администрация</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="auth-modal-login__wrapper">
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="auth-modal__header">Войти</div>
+                            <div class="auth-modal__fields">
+                                {{ login_form.username }}
+                                {{ login_form.password }}
+                            </div>
+                            <div class="auth-modal__buttons-wrapper">
+                                <button class="auth-modal__button-enter" onclick="loginHandler()" type="submit">Войти</button>
+                                <button class="auth-modal__button-switch-to-register">Создать аккаунт</button>
+                            </div>
+                        </form>
+
+                        <a class="auth-modal__forget-password" href="{% url 'password_reset' %}">Забыли пароль?</a>
+                    </div>
+                    <div class="auth-modal-register__wrapper auth-modal-register__wrapper--hidden">
+                        <form method="post" action="{% url 'register' %}">
+                            {% csrf_token %}
+                            <div class="auth-modal__header">Создать аккаунт</div>
+                            <div class="auth-modal__fields">
+                                {{ register_form.email }}
+                                {{ register_form.username }}
+                                {{ register_form.password1 }}
+                                {{ register_form.password2 }}
+                            </div>
+                            <div class="auth-modal__buttons-wrapper">
+                                <button class="auth-modal__button-register" type="submit">Создать аккаунт</button>
+                                <button class="auth-modal__button-switch-to-login">Есть аккаунт? Войти</button>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+                <div class="sidebar__section-topics">
+                    <div class="sidebar__title">Темы</div>
+                    {% for category in categories %}
+                        {% if forloop.counter == 6 %}
+                            <div class="topics-dropdown" role="button">
+                                <img class="topics-arrow" src="/media/icons/arrow-up.svg">
+                                <span>Показать все</span>
+                            </div>
+                        {% endif %}
+                        <div class="sidebar-item" onclick="window.location.href = `${BASE_URL}/{{ category.tag }}`">
+                            <img src="{{ category.image.url }}" class="sidebar-item__icon">
+                            <a href="{% url 'category' category.tag %}" class="sidebar-item__text">{{ category.cat_title }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="sidebar__section-articles">
+                    <div class="sidebar__section-articles__title">ЧИТАЮТ СЕЙЧАС</div>
+                    {% if random_posts %}
+                        {% for post in random_posts %}
+                            <div class="sidebar__article-item">
+                                <div class="sidebar__user-info">
+                                    <div class="sidebar__user-info-details">
+                                        {% if post.user.image %}
+                                            <img src="{{ post.user.image.url }}" class="sidebar__user-avatar">
+                                        {% else %}
+                                            <img src="{% static 'profile_pics/default_profile.jpg' %}" class="sidebar__user-avatar">
+                                        {% endif %}
+                                        <a href="{% url 'profile' post.user.username %}" class="sidebar__user-username">{{ post.user.username }}</a>
+                                    </div>
+                                    <a class="sidebar__date">{{ post.pub_date|smart_time }}</a>
+                                </div>
+                                <a href="{% url 'post_detail' post.id %}" class="sidebar__article-item__title">{{ post.title }}</a>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    <script>
+        const BASE_URL = window.location.origin
+        const section = "{{ section }}"
+    </script>
+    <script>
+        window.postID = '{{ post.id }}'
+        window.csrfToken = "{{ csrf_token }}"
+        window.currentUser = '{{ request.user }}'
+        const currentProfile = window.location.pathname.split('/')[2]
+        window.BASE_URL = window.location.origin
+    </script>
+    <script src="{% static 'js/globals.js' %}"></script>
+    <script src="{% static 'js/domloaded.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
+    <script src="{% static 'js/comments.js' %}"></script>
+    <script src="{% static 'js/bookmarks.js' %}"></script>
+    <script src="{% static 'js/profile.js' %}"></script>
+    <script src="{% static 'js/search.js' %}"></script>
+    <script src="{% static 'js/theme-follows.js' %}"></script>
+    <script src="{% static 'js/follows.js' %}"></script>
+    <script src="{% static 'js/filters.js' %}"></script>
+    <script src="{% static 'js/posts.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

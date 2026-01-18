@@ -1,0 +1,17 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+
+{% block body %}
+    <div class="errors-container">
+        <h3>Ошибки и баги с которыми вы столкнулись</h3>
+        <form method="post" class="errors-form">
+            {% csrf_token %}
+            <div class="errors-form-wrapper">
+                <input class="errors_form__title" name="title" placeholder="Название ошибки">
+                <input class="errors_form__description" name="description" placeholder="Описание ошибки">
+                <button class="error_button">Сообщить об ошибке</button>
+            </div>
+        </form>
+
+    </div>
+{% endblock %}

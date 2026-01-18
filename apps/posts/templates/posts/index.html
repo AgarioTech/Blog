@@ -1,0 +1,47 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+{% load cache %}
+{% load custom_filters %}
+
+
+
+{% block body %}
+    <div class="filters">
+    <div class="filters__header">
+        <div class="filters__title">Моя лента</div>
+        <div class="filters__settings" onclick="moveArrow()">
+            <div class="filters__settings-label">Настройки ленты</div>
+            <img class="filters__arrow filters__arrow--down" src="/media/icons/arrow-up.svg">
+        </div>
+    </div>
+    <div class="filters__body">
+        <div class="filters__section-title">Тип публикации</div>
+        <div class="filters__options">
+            <div class="filters__type-option" onclick="setPostType(this)">Новость</div>
+            <div class="filters__type-option" onclick="setPostType(this)">Статья</div>
+            <div class="filters__type-option" onclick="setPostType(this)">Пост</div>
+        </div>
+        <div class="filters__section-title">Сортировать</div>
+        <div class="filters__options">
+            <div class="filters__filter-option" onclick="setFilter(this)">Свежее</div>
+            <div class="filters__filter-option" onclick="setFilter(this)">Популярное</div>
+            <div class="filters__filter-option" onclick="setFilter(this)">Обсуждаемое</div>
+        </div>
+        <span class="filters__apply-btn" onclick="getFilterPosts(this)" data-id="{{ request.user.id }}" datatype="{{ request.user.username }}">Применить</span>
+    </div>
+    </div>
+        <div class="news-widget">
+        <span>НОВОСТИ</span>
+        {% for post in news_posts %}
+            <div class="news-widget__item">
+                <a href="{% url 'post_detail' post.id %}" class="news-widget__title">{{ post.title }}</a>
+                <div class="news-widget__meta">
+                    <div class="news-widget__date">{{ post.pub_date|smart_time }}</div>
+                    <img src="/media/icons/comment.svg" class="comment-icon" onclick="window.location.href='post/{{ post.id }}/'">
+                    <div class="news-widget__comments-count">{{ post.update_comment_count }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <img src="/media/icons/bad-search-img.png" alt="" class="bad-search-img">
+{% endblock %}

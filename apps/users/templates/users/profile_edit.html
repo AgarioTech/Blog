@@ -1,0 +1,57 @@
+{% extends 'posts/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+    <title>Профиль</title>
+    {% block link %}<link rel="stylesheet" href="{% static 'posts/css/styles.css' %}?v=3">{% endblock %}
+
+
+{% block body %}
+    <div class="main-container">
+        <div class="scroll-top" id="scroll-id">
+            <div class="wrapper-btn">
+                <img src="/media/icons/arrow-up.svg">
+            </div>
+        </div>
+            <div class="settings">
+                <div class="settings__title">Настройки</div>
+                <div class="settings__basic">
+                    <span>Фото</span>
+                    <img src="{{ user.image.url }}" class="profile-image">
+                    <input class="settings__photo" type="file">
+                    <span>Имя пользователя</span>
+                    <input class="settings__username-text" value="{{ user.username }}">
+                    <div class="settings__username-error"></div>
+                </div>
+
+                <div class="settings__email">
+                    <span>Почта</span>
+                    <input class="settings__email-text" value="{{ user.email }}">
+                </div>
+
+                <div class="settings__about">
+                    <span>О себе</span>
+                    <input class="settings__about-text" value="{{ user.bio }}">
+                </div>
+                <div class="settings__errors"></div>
+                <div class="settings__button-data-save" onclick="saveProfileData()">Сохранить</div>
+                <div class="settings__button-change-password" onclick="showChangeWrapper()">Сменить пароль</div>
+                <div class="settings__password">
+                    <div class="settings__old-password">
+                        <span>Старый пароль</span>
+                        <input class="settings__old-password-text" type="password">
+                        <a href="{% url 'password_reset' %}" class="settings__forgot-password-message">Я не помню старый пароль</a>
+                    </div>
+                    <div class="settings__new-password">
+                        <span>Новый пароль</span>
+                        <input class="settings__new-password-text" type="password">
+                    </div>
+                    <div class="settings__error-password-message"></div>
+                    <div class="settings__success-message">Данные успешно обновлены</div>
+                    <div class="settings__button-save-password" onclick="changePassword(this)" data-key="{{ request.user.username }}">Сохранить</div>
+                </div>
+            </div>
+    </div>
+    <script src="{% static 'js/edit_profile.js' %}"></script>
+
+{% endblock %}

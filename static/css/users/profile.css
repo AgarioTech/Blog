@@ -1,0 +1,152 @@
+.profile__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.profile__head {
+    display: flex;
+    flex-direction: column;
+    background: var(--main-element-background);
+    border: 1px solid var(--main-border);
+    min-width: 660px;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    padding: 20px 20px 0 20px;
+    gap: 20px;
+}
+
+.profile__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile__user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile__avatar {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile__username {
+    font-size: 20px;
+}
+
+.profile__bio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile__add-bio-button {
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+.profile__header-nav {
+    display: flex;
+    gap: 30px;
+    margin: 10px 0 0 0;
+}
+
+.settings {
+    padding: 30px;
+    gap: 30px;
+    display: flex;
+    flex-direction: column;
+    width: 660px;
+    height: auto;
+    background: var(--main-element-background);
+    border: 1px solid var(--main-border);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.settings__basic,
+.settings__email,
+.settings__about,
+.settings__password,
+.settings__old-password,
+.settings__new-password {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settings__username-text,
+.settings__email-text,
+.settings__about-text,
+.settings__old-password-text,
+.settings__new-password-text {
+    width: 500px;
+    height: 30px;
+}
+
+.settings__button-data-save,
+.settings__button-change-password,
+.settings__button-save-password {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    background: var(--main-color);
+    color: white;
+    min-height: 40px;
+    min-width: 100px;
+    max-width: 150px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.settings__button-data-save:hover,
+.settings__button-change-password:hover,
+.settings__save-password:hover {
+    background: #2c7cd8;
+    color: white;
+    border: none;
+}
+
+.settings__password {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.settings__forgot-password-message {
+    font-size: 13px;
+    color: var(--main-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.error-data-message {
+    display: none;
+    color: #e54848;
+}
+
+.settings__error-password-message {
+    display: none;
+    color: #e54848;
+}
+
+.settings__success-message {
+    display: none;
+    color: #1fff9e;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+}
