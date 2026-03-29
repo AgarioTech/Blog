@@ -32,7 +32,7 @@ User = get_user_model()
 
 class LoginView(LoginClass):
     form_class = UserLoginForm
-    template_name = 'posts/index.html'
+    template_name = 'users/login.html'
     redirect_authenticated_user = True
     next_page = reverse_lazy('index')
 
@@ -40,12 +40,13 @@ class LoginView(LoginClass):
 class SignUpView(CreateView):
     form_class = UserRegistrationForm
     success_url = reverse_lazy('login')
-    template_name = 'posts/index.html'
+    template_name = 'users/register.html'
 
     def form_valid(self, form):
         response = super().form_valid(form)
         auth_login(self.request, self.object)
         return response
+
 
 class MyLogoutView(LogoutView):
     next_page = reverse_lazy('index')

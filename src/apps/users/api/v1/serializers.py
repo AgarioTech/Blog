@@ -15,10 +15,10 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return [{'username': user.username,
                  'image': user.image.url,
-                 'id': user.id} for user in obj.subscription.followers.all() if user != request.user]
+                 'id': user.id} for user in obj.subscription.followers.all()]
 
     def get_followings(self, obj):
         request = self.context.get('request')
         return [{'username': user.username,
                  'image': user.image.url,
-                 'id': user.id} for user in obj.subscription.followings.all() if user != request.user]
+                 'id': user.id} for user in obj.subscription.followings.all()]

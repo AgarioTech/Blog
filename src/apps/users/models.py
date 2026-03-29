@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
 
 
 class Subscription(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, related_name='categories')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, related_name='subscription')
     followers = models.ManyToManyField(CustomUser, related_name="my_followings", blank=True)
     followings = models.ManyToManyField(CustomUser, related_name="my_followers", blank=True)
 

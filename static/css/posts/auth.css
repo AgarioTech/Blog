@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
-    width: 100%;
+    width: 500px;
     min-height: 300px;
     height: auto;
     border: 1px solid var(--main-border);
@@ -26,15 +26,6 @@
 }
 
 
-.auth-modal-login__wrapper--hidden,
-.auth-modal-register__wrapper--hidden {
-    display: none;
-}
-
-.form-input::placeholder {
-    font-family: 'SF Pro Text';
-}
-
 .auth-modal__button-enter,
 .auth-modal__button-register {
     height: 40px;
@@ -45,7 +36,6 @@
     box-sizing: border-box;
     color: rgb(255, 245, 245);
     font-weight: 600;
-    font-family: 'SF Pro Text';
     cursor: pointer;
 }
 
@@ -55,11 +45,14 @@
     width: 90%;
     background-color: #e6e6e6;
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     border-radius: 6px;
     box-sizing: border-box;
     color: rgb(102, 102, 102);
     font-weight: 600;
-    font-family: 'SF Pro Text';
     cursor: pointer;
 }
 
@@ -89,10 +82,6 @@
 }
 
 
-.auth-modal__header {
-    font-family: 'SF Pro Text';
-}
-
 .auth-modal__forget-password {
     font-size: 14px;
     color: #4fc827;
@@ -116,10 +105,6 @@
     border-radius: 6px;
     border: 1px solid var(--main-border);
     padding-left: 20px;
-}
-
-.form-input::placeholder  {
-    font-family: 'SF Pro Text';
 }
 
 .logout {
@@ -154,4 +139,16 @@ form {
     align-items: center;
     justify-content: center;
     gap: 15px;
+}
+
+.auth-modal__header {
+    font-size: 18px;
+}
+
+.auth-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
 }

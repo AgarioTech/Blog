@@ -10,6 +10,7 @@ from apps.users.models import CustomUser, Subscription
 from apps.users.api.v1.serializers import UserSubscriptionSerializer
 
 from apps.services.users import add_user_subscription
+from rest_framework.views import APIView
 
 User = get_user_model()
 
@@ -44,3 +45,9 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         if request.user in subscription.followers.all():
             return Response({'status': 'subscribed'})
         return Response({'status': 'not subscribed'})
+
+
+class NotificationsView(APIView):
+    def delete(self, request, *args, **kwargs):
+        request.user.user_notifications.all().delete()
+        return Response({'status': 'ok'})

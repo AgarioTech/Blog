@@ -27,31 +27,36 @@
                 Написать
             </a>
             {% if request.user.is_authenticated %}
-                <div class="site-header__icon-notifications-wrapper" onclick="notificationFunc()">
+                <div class="site-header__icon-notifications-wrapper">
                     <img class="site-header__img-notifications" src="/media/icons/bell.png">
-                    {% if notification_count %}
-                        <div class="site-header__notifications-count" style="text-decoration: none;">{{ notification_count }}</div>
+                    {% if notifications %}
+                        <div class="site-header__notifications-count" style="text-decoration: none;">{{ notifications.count }}</div>
                     {% endif %}
                     <div class="site-header__notification-container">
                         <div class="site-header__notifications-navbar">
                             <span>Уведомления</span>
+                            {% if notifications %}
+                                <a class="side-header__remove-all">Очистить все</a>
+                            {% endif %}
                         </div>
+                        {% if not notifications %}
+                            <span class="no-notification-message">Нет уведомлений</span>
+                        {% endif %}
                         <div class="site-header__notifications-message-wrapper">
                             {% for notification in notifications %}
                                 {% if notification.is_active %}
-                                <div class="site-header__notification-item-hover" onclick="window.location.href='{{ notification.link }}'">
-                                    <div class="site-header__notification-item-compact">
-                                        <img src="{{ notification.actor.image.url }}" class="site-header__notification-item-user-img">
-                                        <div>
-                                            {{ notification.message|safe }}
-                                            <div class="site-header__notification-item-date">
-                                                {{ notification.date|smart_time }}
+                                    <div class="site-header__notification-item-hover" onclick="window.location.href='{{ notification.link }}'">
+                                        <div class="site-header__notification-item-compact">
+                                            <img src="{{ notification.actor.image.url }}" class="site-header__notification-item-user-img">
+                                            <div>
+                                                {{ notification.message|safe }}
+                                                <div class="site-header__notification-item-date">
+                                                    {{ notification.date|smart_time }}
+                                                </div>
                                             </div>
+
                                         </div>
-
                                     </div>
-                                </div>
-
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -85,7 +90,7 @@
                             <a href="#" class="site-header__menu-item-link">Сообщить об ошибке</a>
                         </div>
                         <div class="site-header__menu-item">
-                            <a onclick="logout()" class="site-header__menu-item-link">Выйти</a>
+                            <a id="logout" class="site-header__menu-item-link">Выйти</a>
                         </div>
                     </div>
                 {% else %}
@@ -107,99 +112,6 @@
                 {% endblock %}
             </div>
             <div class="sticky-sidebar">
-                {% if request.user.is_authenticated %}
-                    <div class="profile-cont">
-                        <div class="profile-data">
-                            <div class="user-data">
-                                {% if user.image %}
-                                    <img src="{{ user.image.url }}" class="profile-user-img">
-                                {% else %}
-                                    <img src="/media/profile_pics/default_profile.jpg" class="profile-user-img">
-                                {% endif %}
-                                <div class="logout-and-username">
-                                    <a href="{% url 'profile' user.username %}">{{ request.user }}</a>
-                                    <a id="logout" class="logout">выйти</a>
-                                </div>
-                            </div>
-                            <img class="settings-img" src="/media/icons/settings.svg" onclick="settings(this)">
-                        </div>
-                        <div class="profile-elements">
-                            {% if request.user.is_staff %}
-                            <div class="admin-cont" onclick="adminRedirect()">
-                                <a>Администрация</a>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="profile-elements">
-                            {% if request.user.is_staff %}
-                            <div class="admin-cont" onclick="adminRedirect()">
-                                <a>Администрация</a>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="profile-elements">
-                            {% if request.user.is_staff %}
-                            <div class="admin-cont" onclick="adminRedirect()">
-                                <a>Администрация</a>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="profile-elements">
-                            {% if request.user.is_staff %}
-                            <div class="admin-cont" onclick="adminRedirect()">
-                                <a>Администрация</a>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="profile-elements">
-                            {% if request.user.is_staff %}
-                            <div class="admin-cont" onclick="adminRedirect()">
-                                <a>Администрация</a>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="profile-elements">
-                            {% if request.user.is_staff %}
-                            <div class="admin-cont" onclick="adminRedirect()">
-                                <a>Администрация</a>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                    </div>
-                {% else %}
-                    <div class="auth-modal-login__wrapper">
-                        <form method="post" action="{% url 'login' %}">
-                            {% csrf_token %}
-                            <div class="auth-modal__header">Войти</div>
-                            <div class="auth-modal__fields">
-                               <input class="form-input" name="username" placeholder="Введите имя пользователя">
-                               <input class="form-input" name="password" type="password" placeholder="Введите пароль">
-                            </div>
-                            <div class="auth-modal__buttons-wrapper">
-                                <button class="auth-modal__button-enter" type="submit">Войти</button>
-                                <button class="auth-modal__button-switch-to-register">Создать аккаунт</button>
-                            </div>
-                        </form>
-
-                        <a class="auth-modal__forget-password" href="#">Забыли пароль?</a>
-                    </div>
-                    <div class="auth-modal-register__wrapper auth-modal-register__wrapper--hidden">
-                        <form method="post" action="{% url 'register' %}">
-                            {% csrf_token %}
-                            <div class="auth-modal__header">Создать аккаунт</div>
-                            <div class="auth-modal__fields">
-                                <input class="form-input" name="email" placeholder="Введите email">
-                                <input class="form-input" name="username" placeholder="Введите имя пользователя">
-                                <input class="form-input" name="password" type="password" placeholder="Введите пароль">
-                            </div>
-                            <div class="auth-modal__buttons-wrapper">
-                                <button class="auth-modal__button-register" type="submit">Создать аккаунт</button>
-                                <button class="auth-modal__button-switch-to-login">Есть аккаунт? Войти</button>
-                            </div>
-                        </form>
-                    </div>
-                {% endif %}
                 <div class="sidebar__section-topics">
                     <div class="sidebar__title">Темы</div>
                     {% for category in categories %}

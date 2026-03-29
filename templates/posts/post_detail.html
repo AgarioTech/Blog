@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 {% if request.user != post.user %}
-                    <div class="button-follow" onclick="followFunc(this)" data-id="{{ post.user.id }}">Подписаться</div>
+                    <div class="button-follow" onclick="userFollows(this)" data-id="{{ post.user.id }}">Подписаться</div>
                 {% endif %}
             </div>
             <br>

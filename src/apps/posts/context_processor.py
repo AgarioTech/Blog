@@ -27,6 +27,7 @@ def notification_processor(request):
         categories = Category.objects.all()
         notification_count = Notifications.notification_count(request.user)
         notifications = Notifications.objects.filter(user=request.user).order_by('-date')
+        print(f'{request.user=}, {notifications.count=}')
     else:
         categories = Category.objects.all()
         notification_count = ''

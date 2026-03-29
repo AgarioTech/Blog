@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/posts/main.css' %}">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-modal-login__wrapper">
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="auth-modal__header">Войти</div>
+        <div class="auth-modal__fields">
+          {{ form.username }}
+          {{ form.username.errors }}
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+        <div class="auth-modal__buttons-wrapper">
+          <button class="auth-modal__button-enter" type="submit">Войти</button>
+          <a href="{% url 'register' %}" class="auth-modal__button-switch-to-register">Создать аккаунт</a>
+        </div>
+      </form>
+
+      <a class="auth-modal__forget-password" href="#">Забыли пароль?</a>
+    </div>
+  </div>
+</body>
+</html>

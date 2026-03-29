@@ -5,12 +5,46 @@ from apps.users.models import CustomUser
 
 
 class UserLoginForm(AuthenticationForm):
-    pass
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'password')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': 'Введите имя пользователя',
+        })
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': 'Введите пароль'
+        })
+
 
 class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': 'Введите имя пользователя',
+        })
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': 'Введите email',
+        })
+        self.fields['password1'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': 'Введите пароль',
+        })
+        self.fields['password2'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': 'Повторите пароль',
+        })
+
 
 
 class EmailForm(PasswordResetForm):

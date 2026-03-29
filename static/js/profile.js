@@ -231,11 +231,10 @@ async function profileFollowersFunc() {
     isLoadingPosts = true;
     localStorage.setItem('isSearchMode', 'false')
 
+
     profileContentContainer.appendChild(followersWrapper)
     profileContentContainer.innerHTML = ''
     followersWrapper.innerHTML = ''
-
-    postsContainer = profileContentContainer
 
     const oldFollowers = document.querySelectorAll('.follower')
 
@@ -262,7 +261,10 @@ async function profileFollowersFunc() {
                     <img src=${data.followers[i].image} class="following_image">
                     <a class="subs_username" onclick="profile('${data.followers[i].username}')" >${data.followers[i].username}</a>
                 </div>
-                <div class="button-follow" onclick="userFollows(this)" data-id="${data.followers[i].id}" datatype="${currentUser}">Подписаться</div>
+                ${currentUser !== data.followers[i].username
+                    ?`<div class="button-follow" onclick="userFollows(this)" data-id="${data.followers[i].id}" datatype="${currentUser}">Подписаться</div>`
+                    : `<div>Это вы</div>`
+                }
             </div>
         `
         followersWrapper.insertAdjacentHTML('beforeend', follower)
@@ -316,7 +318,7 @@ async function profileSubscribesFunc() {
                 </div>
                 ${currentUser !== data.followings[i].username
                     ?`<div class="button-follow" onclick="userFollows(this)" data-id="${data.followings[i].id}" datatype="${currentUser}">Подписаться</div>`
-                    : ``
+                    : `<div>Это вы</div>`
                 }
             </div>
         `
@@ -330,9 +332,7 @@ const notificationsWrapper = document.querySelector('.site-header__icon-notifica
 
 notificationsWrapper.addEventListener('click', () => {
     const notificationContainer = document.querySelector('.site-header__notification-container')
-    const notificationCount = document.querySelector('.site-header__notifications-count')
-    notificationCount.classList.add('hidden')
-    localStorage.setItem('isNotificationCountActive', false)
+
     if (notificationContainer.classList.contains('clicked')) {
         notificationContainer.classList.remove('clicked')
     } else {
@@ -366,15 +366,22 @@ document.addEventListener('click', function (event) {
     }
 })
 
-function initHiddenNotifications() {
-    const notificationsState = localStorage.getItem('isNotificationCountActive')
-    const notificationCount = document.querySelector('.site-header__notifications-count')
-    if (notificationCount) {
-        if (notificationsState === 'false') {
-            notificationCount.classList.add('hidden')
-        } else {
-            notificationCount.classList.remove('hidden')
-        }
-    }
 
+const removeNotificationsBtn = document.querySelector('.side-header__remove-all')
+if (removeNotificationsBtn) {
+    removeNotificationsBtn.addEventListener('click', async () => {
+        const notifications = document.querySelector('.site-header__notifications-message-wrapper')
+        const notificationContainer = document.querySelector('.site-header__notification-container')
+        notificationContainer.classList.remove('clicked')
+        notifications.innerHTML = ''
+        await fetch(`${BASE_URL}/api/v1/notifications/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+        })
+
+    })
 }
+
