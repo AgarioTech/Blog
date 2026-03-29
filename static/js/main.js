@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     initLoadComments()
     initScrollForPosts(); // 1
-    initLoginCont();
     initThemeSelector(); // 1
     initScroll();
     initSettingsPasswordWrapper();

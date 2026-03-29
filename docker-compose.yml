@@ -24,7 +24,7 @@ services:
     volumes:
       - .:/blog-app
       - static_volume:/blog-app/src/staticfiles
-      - media_volume:/blog-app/media
+      - ./media:/blog-app/media 
     ports:
       - "8000:8000"
     depends_on:
@@ -42,13 +42,16 @@ services:
   nginx:
     image: nginx:latest
     restart: always
-    ports:
-      - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - static_volume:/blog-app/src/staticfiles
-      - media_volume:/blog-app/media
+      - ./media:/blog-app/media
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on: 
+      - web
 volumes:
   postgres_data:
   static_volume:
-  media_volume:

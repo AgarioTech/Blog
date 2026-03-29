@@ -8,7 +8,20 @@ from django.conf.global_settings import STATICFILES_STORAGE, STATICFILES_DIRS, S
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 
 # Quick-start development settings - unsuitable for production
@@ -20,7 +33,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -212,11 +225,8 @@ AUTH_USER_MODEL = 'users.CustomUser'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://0.0.0.0:8000',
-    'http://localhost:8000'
-]
+CSRF_TRUSTED_ORIGINS = ['https://notesapi.ru', 'https://www.notesapi.ru']
+
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
@@ -224,3 +234,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 
 LOGIN_REDIRECT_URL = '/'
+CORS_ALLOWED_ORIGINS = [
+    'http://147.45.237.115',
+    'https://notesapi.ru', 'https://www.notesapi.ru'
+]
