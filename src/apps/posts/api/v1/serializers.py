@@ -14,7 +14,7 @@ class PostSerializer(serializers.ModelSerializer):
     set_bookmark = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     user = serializers.CharField(source='user.username')
-    image = serializers.CharField(source='user.image.url')
+    image = serializers.SerializerMethodField()
     wrapp_img = serializers.SerializerMethodField()
     user_id = serializers.CharField(source='user.id')
     comment_count = serializers.SerializerMethodField()
@@ -68,6 +68,11 @@ class PostSerializer(serializers.ModelSerializer):
     def get_wrapp_img(self, obj):
         if obj.wrapp_img and hasattr(obj.wrapp_img, 'url'):
             return obj.wrapp_img.url
+        return None
+
+    def get_image(self, obj):
+        if obj.user.image:
+            return obj.user.image.url
         return None
 
 class PostCreateSerializer(serializers.ModelSerializer):
