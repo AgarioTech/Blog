@@ -23,7 +23,7 @@ from django.conf import settings
 from apps.posts.views import index
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('', index, name='index'),
     path('', include('apps.posts.urls')),
     path('users/', include('apps.users.urls')),
@@ -34,7 +34,6 @@ urlpatterns = [
     path('api/v1/', include('apps.comments.api.v1.urls')),
     path('', include('apps.categories.urls')),
 
-    # path('errors/', errors_page, name='errors'),
 ]
 
 if settings.DEBUG:

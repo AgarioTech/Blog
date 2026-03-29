@@ -86,9 +86,11 @@
                         <div class="site-header__menu-item">
                             <a href="{% url 'settings' %}" class="site-header__menu-item-link">Настройки</a>
                         </div>
-                        <div class="site-header__menu-item">
-                            <a href="#" class="site-header__menu-item-link">Сообщить об ошибке</a>
-                        </div>
+                        {% if request.user.is_authenticated %}
+                            <div class="site-header__menu-item">
+                                <a href="{%  url 'admin' %}" class="site-header__menu-item-link">Администрация</a>
+                            </div>
+                        {% endif %}
                         <div class="site-header__menu-item">
                             <a id="logout" class="site-header__menu-item-link">Выйти</a>
                         </div>

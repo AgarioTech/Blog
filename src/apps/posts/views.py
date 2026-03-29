@@ -46,16 +46,3 @@ def post_detail(request, pk):
     post.save()
     return render(request, "posts/post_detail.html",
                   {"post": post})
-
-# def errors_page(request):
-#     if request.method == 'POST':
-#         title = request.POST.get('title')
-#         description = request.POST.get('description')
-#
-#         SiteError.objects.create(
-#             title=title,
-#             description=description
-#         )
-#         return render(request, "posts/bags_and_errors.html")
-#     else:
-#         return render(request, "posts/bags_and_errors.html")

@@ -236,5 +236,6 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 LOGIN_REDIRECT_URL = '/'
 CORS_ALLOWED_ORIGINS = [
     'http://147.45.237.115',
-    'https://notesapi.ru', 'https://www.notesapi.ru'
+    'https://notesapi.ru',
+    'https://www.notesapi.ru'
 ]
