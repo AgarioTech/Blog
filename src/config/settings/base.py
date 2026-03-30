@@ -4,7 +4,8 @@ from datetime import timedelta
 from pathlib import Path
 
 from decouple import config
-from django.conf.global_settings import STATICFILES_STORAGE, STATICFILES_DIRS, SESSION_COOKIE_DOMAIN, CSRF_COOKIE_DOMAIN
+from django.conf.global_settings import STATICFILES_STORAGE, STATICFILES_DIRS, SESSION_COOKIE_DOMAIN, \
+    CSRF_COOKIE_DOMAIN, ADMINS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -227,6 +228,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+ADMINS = [
+    ('Admin', 'gromovaa145@gmail.com')
+]
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')
