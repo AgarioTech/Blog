@@ -35,6 +35,7 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         return Response({'status': result})
 
     def retrieve(self, request, *args, **kwargs):
+        #post
         pk = kwargs.get('pk')
         follower_on = User.objects.get(id=pk)
 
