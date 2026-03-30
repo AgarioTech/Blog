@@ -37,7 +37,7 @@ def index(request):
 
 @login_required
 def create_post(request):
-    return render(request, "posts/create_post.html")
+    1 /0
 
 
 def post_detail(request, pk):
