@@ -6,9 +6,7 @@ from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer
 from rest_framework.response import Response
 
 from apps.users.models import CustomUser, Subscription
-
 from apps.users.api.v1.serializers import UserSubscriptionSerializer
-
 from apps.services.users import add_user_subscription
 from rest_framework.views import APIView
 

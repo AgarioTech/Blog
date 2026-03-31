@@ -36,9 +36,3 @@ class Post(models.Model):
 
 
 
-class SiteError(models.Model):
-    title = models.CharField(max_length=500)
-    description = models.TextField()
-    status = models.TextField(default="pending", choices=[("pending", "На рассмотрении"),
-                                                            ("solved", "Решено"),])
-    created_at = models.DateTimeField(auto_now_add=True)

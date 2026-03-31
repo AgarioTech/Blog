@@ -13,19 +13,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 LOGGING = {
     'version': 1,
     "disable_existing_loggers": False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        }
+    },
     'handlers': {
-        'mail_admins': {
+        'console': {
             'level': 'DEBUG',
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'django_debug.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
-    },
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        }
+    }
+
 }
 
 
