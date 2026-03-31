@@ -1,3 +1,4 @@
+import logging
 import random
 
 from django.contrib import auth
@@ -26,6 +27,7 @@ from apps.services.users import get_profile_user_data, change_data
 
 from apps.users.forms import ResetKeyForm, EmailForm
 
+logger = logging.getLogger('django')
 User = get_user_model()
 
 
@@ -35,6 +37,16 @@ class LoginView(LoginClass):
     template_name = 'users/login.html'
     redirect_authenticated_user = True
     next_page = reverse_lazy('index')
+    
+    def form_valid(self, form):
+        logger.info(f'User login {form.cleaned_data.get("username")}')
+        
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        logger.warning(f'User login error {form.cleaned_data.get("username")} |Error: {form.errors}')
+
+        return super().form_invalid(form)
 
 
 class SignUpView(CreateView):
@@ -45,7 +57,14 @@ class SignUpView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         auth_login(self.request, self.object)
+        logger.info(f'Register new user {form.cleaned_data.get("username")}')
         return response
+
+    def form_invalid(self, form):
+        username = self.request.POST.get('username', 'unknown')
+        logger.warning(f'User register error {username} |Error: {form.errors}')
+
+        return super().form_invalid(form)
 
 
 class MyLogoutView(LogoutView):

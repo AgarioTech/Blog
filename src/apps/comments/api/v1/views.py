@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -34,13 +36,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='set-like')
     def set_like(self, request, pk):
-        print(f'request comment: {request.user}, {request}')
+        logging.info(f'User {request.user} set like on comment {pk}')
         comment = set_comment_like(request, pk)
         serializer = CommentSerializer(comment, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'], url_path='set-bookmark')
     def set_bookmark(self, request, pk):
+        logging.info(f'User {request.user} set bookmark on comment {pk}')
         comment = add_comment_bookmark(request, pk)
         serializer = CommentSerializer(comment, context={'request': request})
         return Response(serializer.data)
@@ -74,8 +77,8 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
     def create(self, request, *args, **kwargs):
-        print(f'{request.data=}')
         post_pk = request.data.get('post')
+        logging.info(f'User {request.user} created a comment on post {post_pk}')
         comment = create_comment(request.data, request.user, post_pk)
         serializer = CommentSerializer(comment, context={'request': request})
         return Response(serializer.data, status=HTTP_201_CREATED)

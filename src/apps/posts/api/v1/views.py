@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -15,6 +17,7 @@ from apps.posts.models import Post, User
 from utils.pagination import LargeResultsSetPagination
 
 from apps.posts.api.v1.serializers import PostCreateSerializer
+logger = logging.getLogger('django')
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -51,6 +54,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='bookmark')
     def bookmark(self, request, pk):
+        logger.info(f'User {request.user} set bookmark on post {pk}')
         queryset = add_post_bookmark(request, pk)
         serializer = self.get_serializer(queryset, context={'request': request})
         return Response(serializer.data)
@@ -67,6 +71,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='like')
     def like(self, request, pk):
+        logger.info(f'User {request.user} set like on post {pk}')
         post = set_post_like(request, pk)
         serializer = self.get_serializer(post, context={'request': request})
         return Response(serializer.data)
@@ -95,6 +100,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response('None')
 
     def create(self, request, *args, **kwargs):
+        logger.info(f'User {request.user} create a post')
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
