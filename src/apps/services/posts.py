@@ -108,3 +108,25 @@ def get_post(pk):
     cache.set(f"post_{pk}", post, 300)
     return post
 
+def get_random_posts():
+    random_posts = cache.get("random_posts")
+    if random_posts:
+        return random_posts
+    data = (Post.objects.
+            select_related('category', 'user').
+            prefetch_related('liked_by', 'bookmark_user', 'comments').
+            order_by('?')[:5])
+    cache.set("random_posts", data, 500)
+    return data
+
+def get_news_posts():
+    news_posts = cache.get("news_posts")
+    if news_posts:
+        return news_posts
+    data = (Post.objects.
+            filter(post_type='Новость').
+            select_related('category', 'user').
+            prefetch_related('liked_by', 'bookmark_user', 'comments').
+            order_by('?')[:5])
+    cache.set("news_posts", data, 500)
+    return data

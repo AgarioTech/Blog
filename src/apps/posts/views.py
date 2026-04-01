@@ -1,8 +1,3 @@
-from datetime import timedelta
-
-from django.core.cache import cache
-from django.utils import timezone
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
@@ -12,22 +7,14 @@ from apps.posts.models import Post
 
 from apps.users.forms import UserLoginForm
 
-from src.apps.services.posts import get_post
+from apps.services.posts import get_post, get_random_posts, get_news_posts
 
 
 def index(request):
     form = UserLoginForm()
-    one_day_ago = timezone.now() - timedelta(days=1)
-    news_posts = (Post.objects.
-                  filter(post_type='Новость').
-                  select_related('category', 'user').
-                  prefetch_related('liked_by', 'bookmark_user', 'comments').
-                  order_by('?')[:5])
-
-    random_posts = (Post.objects.
-                    select_related('category', 'user').
-                    prefetch_related('liked_by', 'bookmark_user', 'comments').
-                    order_by('?')[:5])
+    # one_day_ago = timezone.now() - timedelta(days=1)
+    news_posts = get_news_posts()
+    random_posts = get_random_posts()
 
     return render(request, "posts/index.html", {
                                                 "news_posts": news_posts,
