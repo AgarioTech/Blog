@@ -1,4 +1,4 @@
-
+from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
@@ -51,38 +51,60 @@ def set_post_like(request, pk):
     return post
 
 
-def get_filter_posts(request, self):
+def get_filter_posts(self, request):
     filter_key = request.GET.get('filter')
     post_type = request.GET.get('post_type')
     tag = request.GET.get('tag')
     query = request.GET.get('query')
 
-    if post_type:
-        queryset = Post.objects.filter(post_type=post_type, status='published')
+    cache_key = f"posts_{request.get_full_path().replace('/', '_')
+        .replace('?', '_')
+        .replace('&', '_')
+        .replace('=', '_')}"
+    data = cache.get(cache_key)
 
-    elif filter_key:
-        filter_set = {
-            'Свежее':'-pub_date',
-            'Популярное':'-views_count',
-            'Обсуждаемое':'-comment_count',
-        }
-        filter_name =  filter_set[filter_key]
-        queryset = self.get_queryset().order_by(filter_name)
-
-    elif tag is not None:
-        category = get_object_or_404(Category, tag=tag)
-        queryset = self.get_queryset().filter(category=category.id)
-
-    elif query is not None:
-        queryset = self.get_queryset().filter(title__icontains=query)
-
+    if data:
+        return data
     else:
-        queryset = self.get_queryset()
+        if post_type:
+            queryset = Post.objects.filter(post_type=post_type, status='published')
 
-    page = self.paginate_queryset(queryset)
+        elif filter_key:
+            filter_set = {
+                'Свежее':'-pub_date',
+                'Популярное':'-views_count',
+                'Обсуждаемое':'-comment_count',
+            }
+            filter_name =  filter_set[filter_key]
+            queryset = self.get_queryset().order_by(filter_name)
 
-    if page is not None:
-        serializer = self.get_serializer(page, many=True, context={'request': request})
-        return self.get_paginated_response(serializer.data)
-    return Response('Nothing found')
+        elif tag is not None:
+            category = get_object_or_404(Category, tag=tag)
+            queryset = self.get_queryset().filter(category=category.id)
+
+        elif query is not None:
+            queryset = self.get_queryset().filter(title__icontains=query)
+
+        else:
+            queryset = self.get_queryset()
+
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = self.get_serializer(page, many=True, context={'request': request})
+            data = serializer.data
+            cache.set(cache_key, data, 300)
+            return self.get_paginated_response(data)
+        return Response('Nothing found')
+
+def get_post(pk):
+    post = Post.objects.get(id=pk)
+    post.views_count += 1
+    post.save()
+    data = cache.get(f"post_{pk}")
+    if data:
+        return data
+
+    cache.set(f"post_{pk}", post, 300)
+    return post
 

@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.core.cache import cache
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
@@ -11,11 +12,10 @@ from apps.posts.models import Post
 
 from apps.users.forms import UserLoginForm
 
+from src.apps.services.posts import get_post
+
 
 def index(request):
-    import os
-    from django.conf import settings
-    print(f"Ищу тут: {os.path.join(settings.BASE_DIR, 'templates')}")
     form = UserLoginForm()
     one_day_ago = timezone.now() - timedelta(days=1)
     news_posts = (Post.objects.
@@ -37,12 +37,10 @@ def index(request):
 
 @login_required
 def create_post(request):
-    1 / 0
+    return render(request, "posts/create_post.html")
 
 
 def post_detail(request, pk):
-    post = Post.objects.get(id=pk)
-    post.views_count += 1
-    post.save()
+    post = get_post(pk)
     return render(request, "posts/post_detail.html",
                   {"post": post})
