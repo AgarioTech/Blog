@@ -1,5 +1,5 @@
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from rest_framework import status
@@ -99,14 +99,16 @@ def get_filter_posts(self, request):
 
 def get_post(pk):
     post = Post.objects.get(id=pk)
-    post.views_count += 1
-    post.save()
-    data = cache.get(f"post_{pk}")
-    if data:
-        return data
+    if post:
+        post.views_count += 1
+        post.save()
+        data = cache.get(f"post_{pk}")
+        if data:
+            return data
 
-    cache.set(f"post_{pk}", post, 300)
-    return post
+        cache.set(f"post_{pk}", post, 300)
+        return post
+    raise Http404()
 
 def get_random_posts():
     random_posts = cache.get("random_posts")

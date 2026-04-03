@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('config/', include('config.urls'))
 """
+from django.conf.urls import handler400
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf.urls.static import static
@@ -21,6 +22,11 @@ from django.conf.urls.static import static
 from apps.users import views
 from django.conf import settings
 from apps.posts.views import index
+
+handler400 = '400.html'
+handler403 = '403.html'
+handler404 = '404.html'
+handler500 = '500.html'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
