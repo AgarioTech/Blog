@@ -51,20 +51,20 @@ def set_post_like(request, pk):
     return post
 
 
-def get_filter_posts(self, request):
-    filter_key = request.GET.get('filter')
-    post_type = request.GET.get('post_type')
-    tag = request.GET.get('tag')
-    query = request.GET.get('query')
+def get_filter_posts(request, self):
+    filter_key = request.query_params.get('filter')
+    post_type = request.query_params.get('post_type')
+    tag = request.query_params.get('tag')
+    query = request.query_params.get('query')
 
-    cache_key = f"posts_{request.get_full_path().replace('/', '_')
+    cache_key = f"posts_{request._request.get_full_path().replace('/', '_')
         .replace('?', '_')
         .replace('&', '_')
         .replace('=', '_')}"
     data = cache.get(cache_key)
 
     if data:
-        return data
+        return HttpResponse(data)
     else:
         if post_type:
             queryset = Post.objects.filter(post_type=post_type, status='published')

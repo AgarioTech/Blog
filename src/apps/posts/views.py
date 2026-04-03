@@ -32,10 +32,10 @@ def post_detail(request, pk):
     return render(request, "posts/post_detail.html",
                   {"post": post})
 
-def error_400(request):
+def error_400(request, exception=False):
     return render(request, '400.html', status=400)
 
-def error_403(request):
+def error_403(request, exception=False):
     return render(request, '403.html', status=403)
 
 def error_404(request, exception):
