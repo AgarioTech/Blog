@@ -16,7 +16,6 @@ class PostSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.username')
     image = serializers.SerializerMethodField()
     wrapp_img = serializers.SerializerMethodField()
-    user_id = serializers.CharField(source='user.id')
     comment_count = serializers.SerializerMethodField()
     tag = serializers.SerializerMethodField()
 
@@ -26,7 +25,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['title', 'content', 'category', 'pub_date', 'views_count',
                   'user', 'comment_count', 'liked_by', 'image', 'wrapp_img',
                   'id', 'user_id', 'bookmark_user', 'post_type', 'tag',
-                  'likes', 'liked', 'is_authenticated', 'user_id', 'bookmark_count',
+                  'likes', 'liked', 'is_authenticated', 'bookmark_count',
                   'set_bookmark']
 
 
