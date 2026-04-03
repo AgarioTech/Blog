@@ -23,10 +23,10 @@ from apps.users import views
 from django.conf import settings
 from apps.posts.views import index
 
-handler400 = '400.html'
-handler403 = '403.html'
-handler404 = '404.html'
-handler500 = '500.html'
+handler400 = 'apps.posts.views.error_400'
+handler403 = 'apps.posts.views.error_403'
+handler404 = 'apps.posts.views.error_404'
+handler500 = 'apps.posts.views.error_500'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
