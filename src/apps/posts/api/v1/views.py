@@ -86,6 +86,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if page is not None:
             serializer = self.get_serializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
+        return Response({'detail': 'Not found any user posts'})
 
     @action(detail=False, methods=['get'], url_path='get-my-bookmarks-posts/(?P<username>[^/.]+)')
     def get_my_bookmarks_posts(self, request, *args, **kwargs):
