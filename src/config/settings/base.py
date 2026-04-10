@@ -67,7 +67,6 @@ INSTALLED_APPS = [
     'apps.posts.apps.PostsConfig',
     'apps.comments.apps.CommentsConfig',
     'apps.categories.apps.CategoriesConfig',
-    'apps.api.apps.ApiConfig',
     'ckeditor',
     'ckeditor_uploader',
     'django.contrib.admin',

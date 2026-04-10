@@ -64,7 +64,7 @@ def get_filter_posts(request, self):
     data = cache.get(cache_key)
 
     if data:
-        return HttpResponse(data)
+        return Response(data)
     else:
         if post_type:
             queryset = Post.objects.filter(post_type=post_type, status='published')
