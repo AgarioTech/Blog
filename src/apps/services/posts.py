@@ -92,8 +92,8 @@ def get_filter_posts(request, self):
 
         if page is not None:
             serializer = self.get_serializer(page, many=True, context={'request': request})
-            data = serializer.data
-            cache.set(cache_key, data, 300)
+            response = self.get_paginated_response(serializer.data)
+            cache.set(cache_key, response, 300)
             return self.get_paginated_response(data)
         return Response('Nothing found')
 
